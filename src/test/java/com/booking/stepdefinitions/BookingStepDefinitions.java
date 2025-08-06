@@ -1,16 +1,26 @@
 package com.booking.stepdefinitions;
 
+import com.booking.utils.TestContext;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.http.ContentType;
+import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 import org.json.JSONObject;
 import java.util.Map;
 import java.util.Random;
 
+import static io.restassured.RestAssured.given;
+
 public class BookingStepDefinitions {
     private JSONObject requestBody;
+    private TestContext context;
+    private Response response;
+
     @Given("User wants to do a booking with below booking details")
     public void userWantsToDoABookingWithBelowBookingDetails(DataTable bookingDetails) {
         for (Map<String, String> row : bookingDetails.asMaps(String.class, String.class)) {
@@ -46,7 +56,16 @@ public class BookingStepDefinitions {
         return (3000 + random.nextInt(900)); // Generates a number between 3000 and 3999
     }
     @When("User sends a POST request to {string} with the booking details")
-    public void userSendsAPOSTRequestToWithTheBookingDetails(String arg0) {
+    public void userSendsAPOSTRequestToWithTheBookingDetails(String endpoint) {
+        RequestSpecification request = new RequestSpecBuilder()
+                .setBaseUri("https://automationintesting.online")
+                .setContentType(ContentType.JSON)
+                .setAccept("application/json")
+                .build();
+
+        context.requestSpec = given().spec(request);
+
+        response = context.requestSpec.body(requestBody.toString()).when().post("/api/booking");
     }
 
     @Then("the response status code should be {int}")
