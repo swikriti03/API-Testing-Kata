@@ -14,15 +14,16 @@ public class BookingStepDefinitions {
     @Given("User wants to do a booking with below booking details")
     public void userWantsToDoABookingWithBelowBookingDetails(DataTable bookingDetails) {
         for (Map<String, String> row : bookingDetails.asMaps(String.class, String.class)) {
+            final int roomId = generateRandomRoomId();
             System.out.println("Row = " + row);
-            requestBody = createBookingRequestBody(row, 123);
+            requestBody = createBookingRequestBody(row, roomId);
             System.out.println("requestBody = " + requestBody);
 
         }
     }
 
     private JSONObject createBookingRequestBody(Map<String, String> row, int roomid) {
-        int bookingid = 456;
+        int bookingid = generateRandomRoomId();
         return new JSONObject()
                 .put("bookingid", bookingid)
                 .put("roomid", roomid)
