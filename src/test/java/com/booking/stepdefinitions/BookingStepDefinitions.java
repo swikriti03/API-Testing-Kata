@@ -6,10 +6,20 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.json.JSONObject;
+import java.util.Map;
 
 public class BookingStepDefinitions {
+    private JSONObject requestBody;
     @Given("User wants to do a booking with below booking details")
-    public void userWantsToDoABookingWithBelowBookingDetails() {
+    public void userWantsToDoABookingWithBelowBookingDetails(DataTable bookingDetails) {
+        for (Map<String, String> row : bookingDetails.asMaps(String.class, String.class)) {
+            System.out.println("Row = " + row);
+            requestBody = createBookingRequestBody(row, 123);
+            System.out.println("requestBody = " + requestBody);
+
+        }
+    }
+
     private JSONObject createBookingRequestBody(Map<String, String> row, int roomid) {
         int bookingid = 456;
         return new JSONObject()
