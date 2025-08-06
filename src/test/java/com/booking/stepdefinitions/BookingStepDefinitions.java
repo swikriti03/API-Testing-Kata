@@ -7,22 +7,27 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.restassured.builder.RequestSpecBuilder;
-import io.restassured.http.ContentType;
+import io.restassured.module.jsv.JsonSchemaValidator;
 import io.restassured.response.Response;
-import io.restassured.specification.RequestSpecification;
 import org.json.JSONObject;
+
 import java.util.Map;
 import java.util.Random;
 
-import static io.restassured.RestAssured.given;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class BookingStepDefinitions {
     private JSONObject requestBody;
     private TestContext context;
     private Response response;
+
     public BookingStepDefinitions(TestContext context) {
         this.context = context;
+    }
+
+    private static int generateRandomRoomId() {
+        final Random random = new Random();
+        return (3000 + random.nextInt(900)); // Generates a number between 3000 and 3999
     }
 
     @Given("User wants to do a booking with below booking details")
@@ -57,10 +62,6 @@ public class BookingStepDefinitions {
         return value == null ? "" : value;
     }
 
-    private static int generateRandomRoomId() {
-        final Random random = new Random();
-        return (3000 + random.nextInt(900)); // Generates a number between 3000 and 3999
-    }
     @When("User sends a POST request to {string} with the booking details")
     public void userSendsAPOSTRequestToWithTheBookingDetails(String endpoint) {
         APIResources resourceAPI = APIResources.valueOf(endpoint);
@@ -69,14 +70,25 @@ public class BookingStepDefinitions {
     }
 
     @Then("the response status code should be {int}")
-    public void theResponseStatusCodeShouldBe(int arg0) {
+    public void theResponseStatusCodeShouldBe(int statusCode) {
+        response.then().statusCode(statusCode);
     }
 
-    @And("the response should match the {string} json schema")
-    public void theResponseShouldMatchTheJsonSchema(String arg0) {
+    @Then("the response should match the {string} json schema")
+    public void theResponseShouldMatchTheJsonSchema(final String schemaFileName) {
+        response.then()
+                .assertThat()
+                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schemas/" + schemaFileName));
     }
 
     @And("the response should contain the created booking details")
     public void theResponseShouldContainTheCreatedBookingDetails() {
+        assertEquals(context.getSessionContext("firstname"), response.jsonPath().getString("bookings[0].firstname"), "Mismatch in firstname value");
+        assertEquals(context.getSessionContext("lastname"), response.jsonPath().getString("bookings[0].lastname"), "Mismatch in lastname value");
+        assertEquals(context.getSessionContext("depositpaid"), response.jsonPath().getString("bookings[0].depositpaid"), "Mismatch in depositpaid value");
+        assertEquals(context.getSessionContext("checkin"), response.jsonPath().getString("bookings[0].bookingdates.checkin"), "Mismatch in checkin value");
+        assertEquals(context.getSessionContext("checkout"), response.jsonPath().getString("bookings[0].bookingdates.checkout"), "Mismatch in checkout value");
+        assertEquals(context.getSessionContext("email"), response.jsonPath().getString("bookings[0].email"), "Mismatch in email value");
+        assertEquals(context.getSessionContext("phone"), response.jsonPath().getString("bookings[0].phone"), "Mismatch in phone value");
     }
 }
