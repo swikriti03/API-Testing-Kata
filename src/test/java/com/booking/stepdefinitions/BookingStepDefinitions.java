@@ -29,10 +29,12 @@ public class BookingStepDefinitions {
     public void userWantsToDoABookingWithBelowBookingDetails(DataTable bookingDetails) {
         for (Map<String, String> row : bookingDetails.asMaps(String.class, String.class)) {
             final int roomId = generateRandomRoomId();
-            System.out.println("Row = " + row);
-            requestBody = createBookingRequestBody(row, roomId);
-            System.out.println("requestBody = " + requestBody);
+            context.setSessionContext("roomId", String.valueOf(roomId));
 
+            requestBody = createBookingRequestBody(row, roomId);
+            row.forEach((key, value) -> {
+                context.setSessionContext(key, value);
+            });
         }
     }
 
