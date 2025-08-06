@@ -1,5 +1,6 @@
 package com.booking.stepdefinitions;
 
+import com.booking.utils.APIResources;
 import com.booking.utils.TestContext;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
@@ -65,7 +66,8 @@ public class BookingStepDefinitions {
 
         context.requestSpec = given().spec(request);
 
-        response = context.requestSpec.body(requestBody.toString()).when().post("/api/booking");
+        APIResources resourceAPI = APIResources.valueOf(endpoint);
+        response = context.requestSpec.body(requestBody.toString()).when().post(resourceAPI.getResource());
     }
 
     @Then("the response status code should be {int}")
