@@ -11,8 +11,7 @@ import io.restassured.module.jsv.JsonSchemaValidator;
 import io.restassured.response.Response;
 import org.json.JSONObject;
 
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -62,6 +61,17 @@ public class BookingStepDefinitions {
         return value == null ? "" : value;
     }
 
+    @Given("User wants to do a booking with below booking details to check error responses")
+    public void userWantsToDoABookingWithBelowBookingDetailsToCheckErrorResponses(DataTable bookingDetails) {
+        for (Map<String, String> row : bookingDetails.asMaps(String.class, String.class)) {
+            row.forEach((key, value) -> {
+                context.setSessionContext(key, value);
+            });
+            int roomId = Integer.parseInt(context.getSessionContext("roomid"));
+            requestBody = createBookingRequestBody(row, roomId);
+        }
+    }
+
     @When("User sends a POST request to {string} with the booking details")
     public void userSendsAPOSTRequestToWithTheBookingDetails(String endpoint) {
         APIResources resourceAPI = APIResources.valueOf(endpoint);
@@ -90,5 +100,20 @@ public class BookingStepDefinitions {
         assertEquals(context.getSessionContext("checkout"), response.jsonPath().getString("bookings[0].bookingdates.checkout"), "Mismatch in checkout value");
         assertEquals(context.getSessionContext("email"), response.jsonPath().getString("bookings[0].email"), "Mismatch in email value");
         assertEquals(context.getSessionContext("phone"), response.jsonPath().getString("bookings[0].phone"), "Mismatch in phone value");
+    }
+
+    @Then("the response should contain the error message {string}")
+    public void theResponseShouldContainTheErrorMessage(String errorMsg) {
+        Response response = context.getResponse();
+        String rawError = response.jsonPath().getString("fieldErrors");
+        if (rawError == null) {
+            rawError = response.jsonPath().getString("errors");
+        }
+        List<String> actualErrors = Arrays.asList(rawError.replaceAll("[\\[\\]]", "").split(",\\s*"));
+        List<String> expectedErrors = Arrays.asList(errorMsg.split(",\\s*"));
+
+        Collections.sort(actualErrors);
+        Collections.sort(expectedErrors);
+        assertEquals(expectedErrors, actualErrors);
     }
 }
