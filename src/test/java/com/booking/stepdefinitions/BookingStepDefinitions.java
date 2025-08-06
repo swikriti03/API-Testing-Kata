@@ -7,6 +7,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.json.JSONObject;
 import java.util.Map;
+import java.util.Random;
 
 public class BookingStepDefinitions {
     private JSONObject requestBody;
@@ -39,6 +40,10 @@ public class BookingStepDefinitions {
         return value == null ? "" : value;
     }
 
+    private static int generateRandomRoomId() {
+        final Random random = new Random();
+        return (3000 + random.nextInt(900)); // Generates a number between 3000 and 3999
+    }
     @When("User sends a POST request to {string} with the booking details")
     public void userSendsAPOSTRequestToWithTheBookingDetails(String arg0) {
     }
