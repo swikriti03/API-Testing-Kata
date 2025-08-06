@@ -10,4 +10,10 @@ public class TestContext {
     public RequestSpecification requestSpec;
     public Response response;
     public Map<String, Object> session = new HashMap<>();
+    public Response getResponse() {
+        return response;
+    }
+    public void setResponse(Response response) {
+        this.response = response;
+    }
 }
