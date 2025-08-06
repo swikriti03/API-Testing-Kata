@@ -61,14 +61,6 @@ public class BookingStepDefinitions {
     }
     @When("User sends a POST request to {string} with the booking details")
     public void userSendsAPOSTRequestToWithTheBookingDetails(String endpoint) {
-        RequestSpecification request = new RequestSpecBuilder()
-                .setBaseUri("https://automationintesting.online")
-                .setContentType(ContentType.JSON)
-                .setAccept("application/json")
-                .build();
-
-        context.requestSpec = given().spec(request);
-
         APIResources resourceAPI = APIResources.valueOf(endpoint);
         response = context.requestSpec.body(requestBody.toString()).when().post(resourceAPI.getResource());
         context.setResponse(response);
