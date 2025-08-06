@@ -21,6 +21,9 @@ public class BookingStepDefinitions {
     private JSONObject requestBody;
     private TestContext context;
     private Response response;
+    public BookingStepDefinitions(TestContext context) {
+        this.context = context;
+    }
 
     @Given("User wants to do a booking with below booking details")
     public void userWantsToDoABookingWithBelowBookingDetails(DataTable bookingDetails) {
@@ -68,6 +71,7 @@ public class BookingStepDefinitions {
 
         APIResources resourceAPI = APIResources.valueOf(endpoint);
         response = context.requestSpec.body(requestBody.toString()).when().post(resourceAPI.getResource());
+        context.setResponse(response);
     }
 
     @Then("the response status code should be {int}")
