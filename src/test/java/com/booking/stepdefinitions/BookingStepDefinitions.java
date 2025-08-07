@@ -7,13 +7,18 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.restassured.RestAssured;
 import io.restassured.module.jsv.JsonSchemaValidator;
 import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 import org.json.JSONObject;
 
 import java.util.*;
 
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class BookingStepDefinitions {
     private JSONObject requestBody;
@@ -115,5 +120,66 @@ public class BookingStepDefinitions {
         Collections.sort(actualErrors);
         Collections.sort(expectedErrors);
         assertEquals(expectedErrors, actualErrors);
+    }
+
+    @When("User sends a GET request to {string}")
+    public void userSendsAGETRequestTo(String endpoint) {
+        APIResources resourceAPI = APIResources.valueOf(endpoint);
+        RequestSpecification getSpec = RestAssured.given().spec(context.requestSpec)
+                .cookie("token", context.getSessionContext("token"))
+                .queryParam("roomid", Integer.valueOf(context.getSessionContext("roomId")));
+        response = getSpec.get(resourceAPI.getResource());
+        context.setResponse(response);
+        context.setSessionContext("bookingID", response.jsonPath().getString("bookings[0].bookingid"));
+    }
+
+    @When("User sends a GET request to {string} with unbooked room ID")
+    public void userSendsAGETRequestToWithUnbookedRoomID(String endpoint) {
+        APIResources resourceAPI = APIResources.valueOf(endpoint);
+        response = context.requestSpec
+                .cookie("token", context.getSessionContext("token"))
+                .queryParam("roomid", generateRandomRoomId())
+                .get(resourceAPI.getResource());
+        context.setResponse(response);
+    }
+
+    @Then("the response should contain empty booking details")
+    public void theResponseShouldContainEmptyBookingDetails() {
+        assertTrue(context.getResponse().jsonPath().getList("bookings").isEmpty(), "Bookings array is not empty!");
+        context.getResponse().then().assertThat().body("bookings", empty());
+    }
+
+    @When("User sends a GET request to {string} with invalid room ID as {string}")
+    public void userSendsAGETRequestToWithInvalidRoomIDAs(String endpoint, String invalidRoomID) {
+        APIResources resourceAPI = APIResources.valueOf(endpoint);
+        response = context.requestSpec
+                .cookie("token", context.getSessionContext("token"))
+                .queryParam("roomid", invalidRoomID)
+                .get(resourceAPI.getResource());
+        context.setResponse(response);
+    }
+
+    @Then("the error response should say {string}")
+    public void theErrorResponseShouldSay(String errorMessage) {
+        context.getResponse().then().assertThat().body("error", equalTo(errorMessage));
+    }
+
+    @When("User sends a GET request to {string} with an invalid token")
+    public void userSendsAGETRequestToWithAnInvalidToken(String endpoint) {
+        APIResources resourceAPI = APIResources.valueOf(endpoint);
+        context.requestSpec
+                .cookie("token", "invalid_token")
+                .queryParam("roomid", Integer.valueOf(context.getSessionContext("roomId")));
+        response = context.requestSpec.get(resourceAPI.getResource());
+        context.setResponse(response);
+    }
+
+    @When("User sends a GET request to {string} without a token")
+    public void userSendsAGETRequestToWithoutAToken(String endpoint) {
+        APIResources resourceAPI = APIResources.valueOf(endpoint);
+        context.requestSpec
+                .queryParam("roomid", Integer.valueOf(context.getSessionContext("roomId")));
+        response = context.requestSpec.get(resourceAPI.getResource());
+        context.setResponse(response);
     }
 }
