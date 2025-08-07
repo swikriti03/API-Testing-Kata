@@ -32,7 +32,6 @@
             <version>7.22.2</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-junit-platform-engine</artifactId>
@@ -45,7 +44,11 @@
             <version>1.12.2</version>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>net.masterthought</groupId>
+            <artifactId>cucumber-reporting</artifactId>
+            <version>5.7.5</version>
+        </dependency>
         <!-- Rest Assured Dependency -->
         <dependency>
             <groupId>io.rest-assured</groupId>

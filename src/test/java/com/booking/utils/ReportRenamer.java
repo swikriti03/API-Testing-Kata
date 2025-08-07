@@ -34,4 +34,9 @@ public class ReportRenamer {
     public static void init() {
         // This ensures the static block runs
     }
+
+    static {
+        Runtime.getRuntime().addShutdownHook(new Thread(CucumberReportGenerator::generateReport));
+    }
+
 }
