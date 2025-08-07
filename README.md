@@ -1,55 +1,150 @@
-# Kata API Testing in Java
+# 📦 Booking API Automation Framework
 
-API Testing and Java Exercise: Setting up a Basic API Test Automation Framework.
+A professional-grade **API automation framework** built using **Java**, **Cucumber (BDD)**, and **Rest-Assured**,
+with structured logging, modular test design, and seamless integration ready for CI pipelines.
 
-## Objective
-The objective of this exercise is to evaluate your knowledge on API testing and Java by setting up a basic API Test Automation framework using Rest-Assured and Cucumber. You will need to create a test suite that executes a few tests against one endpoint of a hotel booking website and evaluates their responses.
+---
 
-## Background
-The application under test is a simple hotel booking website where you can book a room and also send a form with a request.
+## ✅ Features
 
-The website can be accessed at https://automationintesting.online/.
+- 🔁 **CRUD operations** testing via Booking API
+- 🧾 **Field-level validation** and **error response checks**
+- 🧪 Covers:
+    - `Create Booking API`
+    - `Get Booking API`
+    - `Update Booking API`
+    - `Delete Booking API`
+- 🪵 **JSON logging** via custom Rest-Assured filters with timestamp
+- 🧩 **Modular & scalable** folder structure
+- 📊 **Default HTML Cucumber reports**
+- 📊 **Rich custom HTML Cucumber reports**
+- ⚙️ **CI-ready** with Maven
 
-The Swagger documentation for the two endpoints you will be testing can be found at:
+---
 
-Booking endpoint: https://automationintesting.online/booking/swagger-ui/index.html
-Optionally, you also have the Authentican endpoint: https://automationintesting.online/auth/swagger-ui/index.html
+## 🧰 Tech Stack
 
-## Task
-You are provided with an extremely basic API test project.
+| Component        | Description                                  |
+|------------------|----------------------------------------------|
+| 🟦 **Java 17**      | Programming language                        |
+| 📦 **Maven 3.9.9**  | Build and dependency management             |
+| 🧪 **JUnit**        | Test runner framework                       |
+| 🥒 **Cucumber**     | BDD test structure using Gherkin            |
+| 🔍 **Rest Assured** | API testing library                         |
+| 📜 **Gherkin**      | Human-readable test scenarios               |
 
-Please clone the project and create a new branch with your name. At the end, please push your branch to this project.
+---
 
-The project to start from, can be found here: https://github.com/freddyschoeters/API_Testing_kata
+## 🚀 Getting Started
 
-Your task is to set up an API Test Automation framework from this project using Java, Rest-Assured, and Cucumber (feel free to add more dependencies if required).
+### 🧱 Prerequisites
 
-It is up to you to define the test cases. You don’t need to have a full coverage, but you need to show enough variation on the types of tests that you would need to write and execute, and what to check in the response.
+Ensure the following are installed:
 
-This kata has the purpose to evaluate both your technical skills as well as your testing skills.
+- Java 17+
+- Maven 3.9+
+- IntelliJ IDEA (recommended)
 
-`For this task, you will use the booking endpoint.`
+### 🧩 IntelliJ Plugin Setup
 
+- ✅ Cucumber for Java
+- ✅ Gherkin
 
-## Requirements
-* Use Java as the programming language
-* Use Rest-Assured as the API testing library
-* Use Cucumber as the BDD framework
-* Design your codebase using a proper Java design pattern
-* Write good tests with correct checks
-* Use Git for version control and push your codebase to an open GitHub repository
-* Make regular commits to demonstrate your progress
+---
 
+## 🛠️ Project Setup (IntelliJ)
 
-## Deliverables
-* Your branch pushed in the provided project.
-* A comprehensive test suite covering the scenarios mentioned above
-* A well-structured codebase with proper design patterns and comments
-* Regular commits demonstrating your progress
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/swikriti03/API-Testing-Kata.git
+   ```
 
-## Evaluation Criteria
-* Being able to successfully run the tests
-* Correctness and completeness of the test suite
-* Quality of the codebase (design patterns, structure, code quality, …)
-* Use of Rest-Assured and Cucumber features
-* Commit history and progress demonstration
+2. **Open in IntelliJ**  
+   `File → Open → Select the project folder -> select the pom.xml -> open as project`
+
+3. **Set Project SDK**  
+   `File → Project Structure → Project SDK → Java 17`
+
+4. **Enable Annotation Processing**  
+   `File → Settings → Build, Execution, Deployment → Compiler → Annotation Processors`  
+   ✅ Check `Enable annotation processing`
+
+---
+
+## 🧪 Running Tests
+
+### 🔁 Option 1: Via Maven
+
+```bash
+mvn clean test
+```
+
+### 🔁 Option 2: From TestRunner class
+
+Open `TestRunner.java` and run directly from IntelliJ.  
+Provide the tag you want to execute against the key `FILTER_TAGS_PROPERTY_NAME`
+
+---
+
+## 📂 Folder Structure Overview
+
+```bash
+src
+├── main
+│   └── java
+│       └── com.POJO                    # POJO for serialization
+├── test
+│   ├── java
+│   │   └── com.booking
+│   │       ├── TestRunner              # Test runners
+│   │       ├── utils                   # utils
+│   │       └── setpDefinitions         # Step definition files
+│   └── resources
+│       ├── features                    # Gherkin feature files
+│       ├── schemas                     # Schemas
+│       └── application.properties      # properties
+logs
+└── logfile.txt                  # Custom JSON API logs
+```
+
+---
+
+## 📊 Reports
+
+After execution,
+-a detailed default **Cucumber HTML report** is generated:
+📁 `target/cucumber-reports-yyyyMMdd_HHmmss.html`
+Open this file in your browser to see test summaries, scenarios, steps, and errors.
+
+-a detailed custom **Cucumber HTML report folder** is generated:
+📁 `target/cucumber-html-report-yyyyMMdd_HHmmss`
+Open this folder in explorer & navigate inside and open overview-features.html to see test summaries, scenarios, steps, and errors.
+
+---
+
+## 🛠 Logging: Custom Filter
+
+- All API request & response logs are stored in `/target/logs/logfile.txt`
+- Logged in **JSON format** with timestamps
+- Works for **both success and failure cases**
+- Logging is handled via a custom **Rest-Assured Filter**
+
+---
+
+## ⚠️ Troubleshooting
+
+| Issue                       | Solution                                  |
+|-----------------------------|-------------------------------------------|
+| ❌ Tests not running         | Rebuild the project or check Java version |
+| ❌ Missing logs              | Look carefully into target/logs folder    |
+| ❌ Red annotations           | Enable annotation processing in IntelliJ  |
+| ❌ Plugin warnings           | Install/update required IntelliJ plugins  |
+
+---
+
+## 👩‍💻 Author
+
+**Swikriti**  
+📁 [GitHub](https://github.com/swikriti03)
+
+---
