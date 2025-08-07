@@ -1,4 +1,4 @@
-@booking_regression @create_booking
+@booking_regression @create_booking @noAuth
 Feature: Create Booking
 
   Scenario: User should be able to create booking with valid details
