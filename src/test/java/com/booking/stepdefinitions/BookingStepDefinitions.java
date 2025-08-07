@@ -54,7 +54,7 @@ public class BookingStepDefinitions {
                 .put("roomid", roomid)
                 .put("firstname", safeValue(row.get("firstname")))
                 .put("lastname", safeValue(row.get("lastname")))
-                .put("depositpaid", true)
+                .put("depositpaid", safeValue(row.get("depositpaid")))
                 .put("email", safeValue(row.get("email")))
                 .put("phone", safeValue(row.get("phone")))
                 .put("bookingdates", new JSONObject()
@@ -186,10 +186,29 @@ public class BookingStepDefinitions {
     @When("User sends a PUT request to {string} with the following details")
     public void userSendsAPUTRequestToWithTheFollowingDetails(String endpoint, DataTable bookingDetails) {
         for (Map<String, String> row : bookingDetails.asMaps(String.class, String.class)) {
-            requestBody = createBookingRequestBody(row, Integer.parseInt(context.getSessionContext("bookingID")));
             row.forEach((key, value) -> {
                 context.setSessionContext(key, value);
             });
+            int roomId = Integer.parseInt(context.getSessionContext("roomid"));
+            requestBody = createBookingRequestBody(row, roomId);
+        }
+        APIResources resourceAPI = APIResources.valueOf(endpoint);
+        RequestSpecification updateSpec = RestAssured.given().spec(context.requestSpec)
+                .body(requestBody.toString())
+                .cookie("token", context.getSessionContext("token"))
+                .pathParam("id", Integer.valueOf(context.getSessionContext("bookingID")));
+        response = updateSpec.put(resourceAPI.getResource());
+        context.setResponse(response);
+    }
+
+    @When("User sends a PUT request to {string} with the following details to check error responses")
+    public void userSendsAPUTRequestToWithTheFollowingDetailsToCheckErrorMessage(String endpoint, DataTable bookingDetails) {
+        for (Map<String, String> row : bookingDetails.asMaps(String.class, String.class)) {
+            row.forEach((key, value) -> {
+                context.setSessionContext(key, value);
+            });
+            int roomId = Integer.parseInt(context.getSessionContext("roomid"));
+            requestBody = createBookingRequestBody(row, roomId);
         }
         APIResources resourceAPI = APIResources.valueOf(endpoint);
         RequestSpecification updateSpec = RestAssured.given().spec(context.requestSpec)
