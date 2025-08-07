@@ -280,4 +280,30 @@ public class BookingStepDefinitions {
         context.setResponse(response);
     }
 
+    @When("User sends a DELETE request to {string}")
+    public void userSendsADELETERequestTo(String endpoint) {
+        APIResources resourceAPI = APIResources.valueOf(endpoint);
+        context.requestSpec
+                .cookie("token", context.getSessionContext("token"))
+                .pathParam("id", Integer.valueOf(context.getSessionContext("bookingID")));
+        response = context.requestSpec.delete(resourceAPI.getResource());
+        context.setResponse(response);
+    }
+    @When("User sends a DELETE request to {string} with an invalid token")
+    public void userSendsADELETERequestToWithAnInvalidToken(String endpoint) {
+        APIResources resourceAPI = APIResources.valueOf(endpoint);
+        context.requestSpec.cookie("token", "invalid_token")
+                .pathParam("id", Integer.valueOf(context.getSessionContext("bookingID")));
+        response = context.requestSpec.delete(resourceAPI.getResource());
+        context.setResponse(response);
+    }
+
+    @When("User sends a DELETE request to {string} without a token")
+    public void userSendsADELETERequestToWithoutAToken(String endpoint) {
+        APIResources resourceAPI = APIResources.valueOf(endpoint);
+        context.requestSpec
+                .pathParam("id", Integer.valueOf(context.getSessionContext("bookingID")));
+        response = context.requestSpec.delete(resourceAPI.getResource());
+        context.setResponse(response);
+    }
 }
