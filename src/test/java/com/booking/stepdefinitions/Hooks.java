@@ -1,4 +1,4 @@
-package com.booking.stepDefinitions;
+package com.booking.stepdefinitions;
 
 import com.POJO.AuthAPIReq;
 import com.booking.utils.APIResources;
@@ -30,11 +30,13 @@ public class Hooks {
     @BeforeAll
     public static void before_or_after_all() {
         ReadProperties.PropertyReader();
+        new File("target/logs").mkdirs();
     }
 
     @Before(value = "not @noAuth", order = 0)
     public void beforeScenario(Scenario scenario) {
         RestAssured.reset();
+        RestAssured.filters(new JsonLoggingFilter());
         AuthAPIReq authAPIReq = new AuthAPIReq();
         authAPIReq.setUsername(ReadProperties.getValue("user.username"));
         authAPIReq.setPassword(ReadProperties.getValue("user.password"));
@@ -56,6 +58,7 @@ public class Hooks {
     @Before(order = 1)
     public void setup() {
         RestAssured.reset();
+        RestAssured.filters(new JsonLoggingFilter());
         RequestSpecification request = new RequestSpecBuilder()
                 .setBaseUri(ReadProperties.getValue("application.baseURI"))
                 .setContentType(ContentType.JSON)
@@ -64,4 +67,5 @@ public class Hooks {
 
         context.requestSpec = given().spec(request);
     }
+
 }
