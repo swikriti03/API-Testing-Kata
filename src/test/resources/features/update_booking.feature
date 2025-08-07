@@ -59,7 +59,7 @@ Feature: Update Booking
       | Rocky     | Anguez   | false       |                 | 787865432213 | 2025-08-10 | 2025-08-12 | 3001   | must not be empty                                                                                    |
       | Rocky     | Anguez   | false       |                 |              | 2025-08-10 | 2025-08-12 | 3001   | must not be empty, size must be between 11 and 21, must not be empty                                 |
       |           |          | false       | Rocky@test.com  | 787865432213 | 2025-08-10 | 2025-08-15 | 3001   | Lastname should not be blank, Firstname should not be blank, size must be between 3 and 30, 3 and 18 |
-      | Rocky     | Anguez   | dsd         | Rocky@test.com  | 66765451326  | 2025-08-10 | 2025-08-12 | 3041   | Depositpaid should be a boolean value                                                                |
-      | Rocky     | Anguez   |             | Rocky@test.com  | 66765451326  | 2025-08-10 | 2025-08-12 | 3041   | Depositpaid should not be blank                                                                      |
+      | Rocky     | Anguez   | dsd         | Rocky@test.com  | 66765451326  | 2025-08-10 | 2025-08-12 | 3041   | depositpaid should be a boolean value                                                                |
+      | Rocky     | Anguez   |             | Rocky@test.com  | 66765451326  | 2025-08-10 | 2025-08-12 | 3041   | depositpaid should not be blank                                                                      |
       | Rocky     | Anguez   | true        | Rocky@test.com  | 66765451326  | 2025-08-10 | 2025-08-12 | 0      | must be greater than or equal to 1                                                                   |
 
