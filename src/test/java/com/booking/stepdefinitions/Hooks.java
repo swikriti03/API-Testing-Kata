@@ -1,10 +1,7 @@
 package com.booking.stepdefinitions;
 
 import com.POJO.AuthAPIReq;
-import com.booking.utils.APIResources;
-import com.booking.utils.JsonLoggingFilter;
-import com.booking.utils.ReadProperties;
-import com.booking.utils.TestContext;
+import com.booking.utils.*;
 import io.cucumber.java.Before;
 import io.cucumber.java.BeforeAll;
 import io.cucumber.java.Scenario;
@@ -31,6 +28,7 @@ public class Hooks {
     public static void before_or_after_all() {
         ReadProperties.PropertyReader();
         new File("target/logs").mkdirs();
+        ReportRenamer.init();
     }
 
     @Before(value = "not @noAuth", order = 0)
