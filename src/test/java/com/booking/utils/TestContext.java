@@ -10,6 +10,7 @@ import java.util.Optional;
 
 public class TestContext {
     public RequestSpecification requestSpec;
+    public RequestSpecification postPutRequestSpec;
     public Response response;
     public Map<String, String> session = new HashMap<>();
     public Response getResponse() {

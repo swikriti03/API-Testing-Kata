@@ -37,10 +37,10 @@ public class BookingStepDefinitions {
     @Given("User wants to do a booking with below booking details")
     public void userWantsToDoABookingWithBelowBookingDetails(DataTable bookingDetails) {
         for (Map<String, String> row : bookingDetails.asMaps(String.class, String.class)) {
-            final int roomId = generateRandomRoomId();
-            context.setSessionContext("roomId", String.valueOf(roomId));
+            final int roomid = generateRandomRoomId();
+            context.setSessionContext("roomid", String.valueOf(roomid));
 
-            requestBody = createBookingRequestBody(row, roomId);
+            requestBody = createBookingRequestBody(row, roomid);
             row.forEach((key, value) -> {
                 context.setSessionContext(key, value);
             });
@@ -72,15 +72,15 @@ public class BookingStepDefinitions {
             row.forEach((key, value) -> {
                 context.setSessionContext(key, value);
             });
-            int roomId = Integer.parseInt(context.getSessionContext("roomid"));
-            requestBody = createBookingRequestBody(row, roomId);
+            int roomid = Integer.parseInt(context.getSessionContext("roomid"));
+            requestBody = createBookingRequestBody(row, roomid);
         }
     }
 
     @When("User sends a POST request to {string} with the booking details")
     public void userSendsAPOSTRequestToWithTheBookingDetails(String endpoint) {
         APIResources resourceAPI = APIResources.valueOf(endpoint);
-        response = context.requestSpec.body(requestBody.toString()).when().post(resourceAPI.getResource());
+        response = context.postPutRequestSpec.body(requestBody.toString()).when().post(resourceAPI.getResource());
         context.setResponse(response);
     }
 
@@ -127,7 +127,7 @@ public class BookingStepDefinitions {
         APIResources resourceAPI = APIResources.valueOf(endpoint);
         RequestSpecification getSpec = RestAssured.given().spec(context.requestSpec)
                 .cookie("token", context.getSessionContext("token"))
-                .queryParam("roomid", Integer.valueOf(context.getSessionContext("roomId")));
+                .queryParam("roomid", Integer.valueOf(context.getSessionContext("roomid")));
         response = getSpec.get(resourceAPI.getResource());
         context.setResponse(response);
         context.setSessionContext("bookingID", response.jsonPath().getString("bookings[0].bookingid"));
@@ -169,7 +169,7 @@ public class BookingStepDefinitions {
         APIResources resourceAPI = APIResources.valueOf(endpoint);
         context.requestSpec
                 .cookie("token", "invalid_token")
-                .queryParam("roomid", Integer.valueOf(context.getSessionContext("roomId")));
+                .queryParam("roomid", Integer.valueOf(context.getSessionContext("roomid")));
         response = context.requestSpec.get(resourceAPI.getResource());
         context.setResponse(response);
     }
@@ -178,7 +178,7 @@ public class BookingStepDefinitions {
     public void userSendsAGETRequestToWithoutAToken(String endpoint) {
         APIResources resourceAPI = APIResources.valueOf(endpoint);
         context.requestSpec
-                .queryParam("roomid", Integer.valueOf(context.getSessionContext("roomId")));
+                .queryParam("roomid", Integer.valueOf(context.getSessionContext("roomid")));
         response = context.requestSpec.get(resourceAPI.getResource());
         context.setResponse(response);
     }
@@ -189,11 +189,11 @@ public class BookingStepDefinitions {
             row.forEach((key, value) -> {
                 context.setSessionContext(key, value);
             });
-            int roomId = Integer.parseInt(context.getSessionContext("roomid"));
-            requestBody = createBookingRequestBody(row, roomId);
+            int roomid = Integer.parseInt(context.getSessionContext("roomid"));
+            requestBody = createBookingRequestBody(row, roomid);
         }
         APIResources resourceAPI = APIResources.valueOf(endpoint);
-        RequestSpecification updateSpec = RestAssured.given().spec(context.requestSpec)
+        RequestSpecification updateSpec = RestAssured.given().spec(context.postPutRequestSpec)
                 .body(requestBody.toString())
                 .cookie("token", context.getSessionContext("token"))
                 .pathParam("id", Integer.valueOf(context.getSessionContext("bookingID")));
@@ -207,11 +207,11 @@ public class BookingStepDefinitions {
             row.forEach((key, value) -> {
                 context.setSessionContext(key, value);
             });
-            int roomId = Integer.parseInt(context.getSessionContext("roomid"));
-            requestBody = createBookingRequestBody(row, roomId);
+            int roomid = Integer.parseInt(context.getSessionContext("roomid"));
+            requestBody = createBookingRequestBody(row, roomid);
         }
         APIResources resourceAPI = APIResources.valueOf(endpoint);
-        RequestSpecification updateSpec = RestAssured.given().spec(context.requestSpec)
+        RequestSpecification updateSpec = RestAssured.given().spec(context.postPutRequestSpec)
                 .body(requestBody.toString())
                 .cookie("token", context.getSessionContext("token"))
                 .pathParam("id", Integer.valueOf(context.getSessionContext("bookingID")));
@@ -239,11 +239,11 @@ public class BookingStepDefinitions {
             });
         }
         APIResources resourceAPI = APIResources.valueOf(endpoint);
-        context.requestSpec
+        context.postPutRequestSpec
                 .body(requestBody.toString())
                 .cookie("token", context.getSessionContext("token"))
                 .pathParam("id", Integer.valueOf(generateRandomRoomId()));
-        response = context.requestSpec.put(resourceAPI.getResource());
+        response = context.postPutRequestSpec.put(resourceAPI.getResource());
         context.setResponse(response);
     }
 
@@ -256,11 +256,11 @@ public class BookingStepDefinitions {
             });
         }
         APIResources resourceAPI = APIResources.valueOf(endpoint);
-        context.requestSpec
+        context.postPutRequestSpec
                 .body(requestBody.toString())
                 .cookie("token", "Invalid_token")
                 .pathParam("id", Integer.valueOf(context.getSessionContext("bookingID")));
-        response = context.requestSpec.put(resourceAPI.getResource());
+        response = context.postPutRequestSpec.put(resourceAPI.getResource());
         context.setResponse(response);
     }
 
@@ -273,10 +273,10 @@ public class BookingStepDefinitions {
             });
         }
         APIResources resourceAPI = APIResources.valueOf(endpoint);
-        context.requestSpec
+        context.postPutRequestSpec
                 .body(requestBody.toString())
                 .pathParam("id", Integer.valueOf(context.getSessionContext("bookingID")));
-        response = context.requestSpec.put(resourceAPI.getResource());
+        response = context.postPutRequestSpec.put(resourceAPI.getResource());
         context.setResponse(response);
     }
 

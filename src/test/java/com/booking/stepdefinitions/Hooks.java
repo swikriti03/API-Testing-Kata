@@ -66,6 +66,7 @@ public class Hooks {
                 .build();
 
         context.requestSpec = given().spec(request);
+        context.postPutRequestSpec = given().spec(request);
     }
 
 }
