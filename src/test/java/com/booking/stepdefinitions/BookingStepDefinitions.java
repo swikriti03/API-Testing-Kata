@@ -182,4 +182,83 @@ public class BookingStepDefinitions {
         response = context.requestSpec.get(resourceAPI.getResource());
         context.setResponse(response);
     }
+
+    @When("User sends a PUT request to {string} with the following details")
+    public void userSendsAPUTRequestToWithTheFollowingDetails(String endpoint, DataTable bookingDetails) {
+        for (Map<String, String> row : bookingDetails.asMaps(String.class, String.class)) {
+            requestBody = createBookingRequestBody(row, Integer.parseInt(context.getSessionContext("bookingID")));
+            row.forEach((key, value) -> {
+                context.setSessionContext(key, value);
+            });
+        }
+        APIResources resourceAPI = APIResources.valueOf(endpoint);
+        RequestSpecification updateSpec = RestAssured.given().spec(context.requestSpec)
+                .body(requestBody.toString())
+                .cookie("token", context.getSessionContext("token"))
+                .pathParam("id", Integer.valueOf(context.getSessionContext("bookingID")));
+        response = updateSpec.put(resourceAPI.getResource());
+        context.setResponse(response);
+    }
+
+    @Then("the response should contain the updated booking details")
+    public void theResponseShouldContainTheUpdatedBookingDetails() {
+        assertEquals(context.getSessionContext("firstname"), response.jsonPath().getString("bookings[0].firstname"), "Mismatch in firstname value");
+        assertEquals(context.getSessionContext("lastname"), response.jsonPath().getString("bookings[0].lastname"), "Mismatch in lastname value");
+        assertEquals(context.getSessionContext("depositpaid"), response.jsonPath().getString("bookings[0].depositpaid"), "Mismatch in depositpaid value");
+        assertEquals(context.getSessionContext("checkin"), response.jsonPath().getString("bookings[0].bookingdates.checkin"), "Mismatch in checkin value");
+        assertEquals(context.getSessionContext("checkout"), response.jsonPath().getString("bookings[0].bookingdates.checkout"), "Mismatch in checkout value");
+        assertEquals(context.getSessionContext("email"), response.jsonPath().getString("bookings[0].email"), "Mismatch in email value");
+        assertEquals(context.getSessionContext("phone"), response.jsonPath().getString("bookings[0].phone"), "Mismatch in phone value");
+    }
+
+    @When("User sends a PUT request to {string} with the following details with invalid booking ID")
+    public void userSendsAPUTRequestToWithTheFollowingDetailsWithInvalidBookingID(String endpoint, DataTable bookingDetails) {
+        for (Map<String, String> row : bookingDetails.asMaps(String.class, String.class)) {
+            requestBody = createBookingRequestBody(row, Integer.parseInt(context.getSessionContext("bookingID")));
+            row.forEach((key, value) -> {
+                context.setSessionContext(key, value);
+            });
+        }
+        APIResources resourceAPI = APIResources.valueOf(endpoint);
+        context.requestSpec
+                .body(requestBody.toString())
+                .cookie("token", context.getSessionContext("token"))
+                .pathParam("id", Integer.valueOf(generateRandomRoomId()));
+        response = context.requestSpec.put(resourceAPI.getResource());
+        context.setResponse(response);
+    }
+
+    @When("User sends a PUT request to {string} with an invalid token and the following details")
+    public void userSendsAPUTRequestToWithAnInvalidTokenAndTheFollowingDetails(String endpoint, DataTable bookingDetails) {
+        for (Map<String, String> row : bookingDetails.asMaps(String.class, String.class)) {
+            requestBody = createBookingRequestBody(row, Integer.parseInt(context.getSessionContext("bookingID")));
+            row.forEach((key, value) -> {
+                context.setSessionContext(key, value);
+            });
+        }
+        APIResources resourceAPI = APIResources.valueOf(endpoint);
+        context.requestSpec
+                .body(requestBody.toString())
+                .cookie("token", "Invalid_token")
+                .pathParam("id", Integer.valueOf(context.getSessionContext("bookingID")));
+        response = context.requestSpec.put(resourceAPI.getResource());
+        context.setResponse(response);
+    }
+
+    @When("User sends a PUT request to {string} without a token and the following details")
+    public void userSendsAPUTRequestToWithoutATokenAndTheFollowingDetails(String endpoint, DataTable bookingDetails) {
+        for (Map<String, String> row : bookingDetails.asMaps(String.class, String.class)) {
+            requestBody = createBookingRequestBody(row, Integer.parseInt(context.getSessionContext("bookingID")));
+            row.forEach((key, value) -> {
+                context.setSessionContext(key, value);
+            });
+        }
+        APIResources resourceAPI = APIResources.valueOf(endpoint);
+        context.requestSpec
+                .body(requestBody.toString())
+                .pathParam("id", Integer.valueOf(context.getSessionContext("bookingID")));
+        response = context.requestSpec.put(resourceAPI.getResource());
+        context.setResponse(response);
+    }
+
 }
