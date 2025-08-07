@@ -15,10 +15,12 @@ Feature: Delete Booking
     Then the response status code should be 200
     And the response should match the "DeleteBookingSchema.json" json schema
 
+  @error_validation
   Scenario: User should not be authorised to delete booking details with an invalid token
     When User sends a DELETE request to "DeleteBookingAPI" with an invalid token
     Then the response status code should be 500
 
+  @error_validation
   Scenario: User should not be authorised to delete booking details without a valid token
     When User sends a DELETE request to "DeleteBookingAPI" without a token
     Then the response status code should be 401

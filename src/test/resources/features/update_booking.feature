@@ -18,25 +18,28 @@ Feature: Update Booking
     And the response should match the "CreateUpdateBookingSchema.json" json schema
     And the response should contain the updated booking details
 
+  @error_validation
   Scenario: User should get error when trying to update a booking with invalid booking ID
     When User sends a PUT request to "UpdateBookingAPI" with the following details with invalid booking ID
       | firstname | lastname | depositpaid | email            | phone       | checkin    | checkout   |
       | John      | Cena     | true        | john@example.com | 12345678901 | 2025-10-01 | 2025-10-05 |
     Then the response status code should be 500
 
+  @error_validation
   Scenario: User should not be authorised to update booking details with an invalid token
     When User sends a PUT request to "UpdateBookingAPI" with an invalid token and the following details
       | firstname | lastname | depositpaid | email            | phone       | checkin    | checkout   |
       | John      | Cena     | true        | john@example.com | 12345678901 | 2025-10-01 | 2025-10-05 |
     Then the response status code should be 500
 
+  @error_validation
   Scenario: User should not be authorised to update booking details without a valid token
     When User sends a PUT request to "UpdateBookingAPI" without a token and the following details
       | firstname | lastname | depositpaid | email            | phone       | checkin    | checkout   |
       | John      | Cena     | true        | john@example.com | 12345678901 | 2025-10-01 | 2025-10-05 |
     Then the response status code should be 401
 
-  @test
+  @@error_validation
   Scenario Outline: Updating an existing booking should fail if mandatory fields are missing or invalid values are passed
     When User sends a PUT request to "UpdateBookingAPI" with the following details to check error responses
       | firstname   | lastname   | depositpaid   | email   | phone   | checkin   | checkout   | roomid   |

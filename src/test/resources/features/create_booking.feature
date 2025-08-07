@@ -10,6 +10,7 @@ Feature: Create Booking
     And the response should match the "CreateUpdateBookingSchema.json" json schema
     And the response should contain the created booking details
 
+  @error_validation
   Scenario Outline: Booking should fail if mandatory fields are missing or invalid values are passed
     Given User wants to do a booking with below booking details to check error responses
       | firstname   | lastname   | depositpaid   | email   | phone   | checkin   | checkout   | roomid   |

@@ -19,17 +19,18 @@ Feature: Get booking by room id
     Then the response status code should be 200
     And the response should contain empty booking details
 
+  @error_validation
   Scenario: User should be informed of bad request when he tries to get a booking using invalid room ID
     When User sends a GET request to "GetBookingsByRoomIDAPI" with invalid room ID as ""
     Then the response status code should be 400
     And the error response should say "Room ID is required"
 
-  @noAuth
+  @noAuth @error_validation
   Scenario: User should not be authorised to get booking details with an invalid token
     When User sends a GET request to "GetBookingsByRoomIDAPI" with an invalid token
     Then the response status code should be 500
 
-  @noAuth
+  @noAuth @error_validation
   Scenario: User should not be authorised to get booking details without a valid token
     When User sends a GET request to "GetBookingsByRoomIDAPI" without a token
     Then the response status code should be 401

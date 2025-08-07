@@ -84,6 +84,17 @@ mvn clean test
 Open `TestRunner.java` and run directly from IntelliJ.  
 Provide the tag you want to execute against the key `FILTER_TAGS_PROPERTY_NAME`
 
+Below tags can be combined using operators like and, or ,not:
+
+Execute all the scenarios (default tag): @booking_regression
+Execute all error validation scenarios: @error_validation
+Execute end-to-end test: @e2e_scenario
+Execute tests related to create booking API: @create_booking
+Execute tests related to retrieve booking API: @get_booking_by_roomID
+Execute tests related to update booking API: @update_booking
+Execute tests related to delete booking API: @delete_booking
+Execute all tests that does not require authentication: @noAuth
+
 ---
 
 ## 📂 Folder Structure Overview
