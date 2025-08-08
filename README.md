@@ -81,19 +81,18 @@ mvn clean test
 
 ### 🔁 Option 2: From TestRunner class
 
-Open `TestRunner.java` and run directly from IntelliJ.  
-Provide the tag you want to execute against the key `FILTER_TAGS_PROPERTY_NAME`
+Open TestRunner.java and run directly from IntelliJ.
+Provide the tag you want to execute using the key FILTER_TAGS_PROPERTY_NAME.
 
-Below tags can be combined using operators like and, or ,not:
-
-Execute all the scenarios (default tag): @booking_regression
-Execute all error validation scenarios: @error_validation
-Execute end-to-end test: @e2e_scenario
-Execute tests related to create booking API: @create_booking
-Execute tests related to retrieve booking API: @get_booking_by_roomID
-Execute tests related to update booking API: @update_booking
-Execute tests related to delete booking API: @delete_booking
-Execute all tests that does not require authentication: @noAuth
+Below tags can be combined using operators like and, or, not:
+•	Execute all the scenarios (default tag): @booking_regression
+•	Execute all error validation scenarios: @error_validation
+•	Execute end-to-end test: @e2e_scenario
+•	Execute tests related to Create Booking API: @create_booking
+•	Execute tests related to Retrieve Booking API: @get_booking_by_roomID
+•	Execute tests related to Update Booking API: @update_booking
+•	Execute tests related to Delete Booking API: @delete_booking
+•	Execute all tests that do not require authentication: @noAuth
 
 ---
 
@@ -114,23 +113,32 @@ src
 │       ├── features                    # Gherkin feature files
 │       ├── schemas                     # Schemas
 │       └── application.properties      # properties
-logs
-└── logfile.txt                  # Custom JSON API logs
-```
+target
+├── logs
+│   └── logfile.txt                     # Custom JSON API logs
+├── cucumber-reports-20250808_134522.html    # Main Cucumber HTML report
+└── cucumber-html-report-20250808_134522     # Another HTML report (folder or HTML file)
 
 ---
 
-## 📊 Reports
+📊 Test Reports
 
-After execution,
--a detailed default **Cucumber HTML report** is generated:
-📁 `target/cucumber-reports-yyyyMMdd_HHmmss.html`
-Open this file in your browser to see test summaries, scenarios, steps, and errors.
+After running the tests, two types of HTML reports are generated under the target/ directory.
+These reports help you quickly review test results, scenarios, steps, and any failures.
 
--a detailed custom **Cucumber HTML report folder** is generated:
-📁 `target/cucumber-html-report-yyyyMMdd_HHmmss`
-Open this folder in explorer & navigate inside and open overview-features.html to see test summaries, scenarios, steps, and errors.
+1️⃣ Default Cucumber HTML Report
+Location: target/cucumber-reports-yyyyMMdd_HHmmss.html
+How to open:
+-Double-click the file, or
+-Right-click → “Open with” → Select your browser
 
+2️⃣ Custom Cucumber HTML Report (Detailed View)
+Location: target/cucumber-html-report-yyyyMMdd_HHmmss/
+How to open:
+-Open the folder in your file explorer.
+-Locate and open overview-features.html in your browser.
+
+💡 Tip: The timestamp (yyyyMMdd_HHmmss) in the file/folder name ensures that every test run keeps its own separate reports — no overwriting.
 ---
 
 ## 🛠 Logging: Custom Filter
